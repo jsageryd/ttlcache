@@ -9,19 +9,20 @@ import (
 // Cache is a key-value cache for arbitrary values
 type Cache interface {
 	Expire(key interface{})
-	Set(key interface{}, value interface{})
 	Get(key interface{}) (interface{}, bool)
+	Set(key interface{}, value interface{})
 }
 
 type item struct {
-	value interface{}
 	timer *time.Timer
+	value interface{}
 }
 
 type cache struct {
+	sync.RWMutex
+
 	items map[interface{}]item
 	ttl   time.Duration
-	sync.RWMutex
 }
 
 // New returns a new cache. ttl is the time to live for its items.
@@ -31,6 +32,13 @@ func New(ttl time.Duration) Cache {
 		ttl:   ttl,
 	}
 	return &c
+}
+
+// Expire deletes given key.
+func (c *cache) Expire(key interface{}) {
+	c.Lock()
+	delete(c.items, key)
+	c.Unlock()
 }
 
 // Get retrieves a value for given key. Returned boolean is true if value
@@ -52,18 +60,14 @@ func (c *cache) Set(key interface{}, value interface{}) {
 		i.timer.Reset(c.ttl)
 		i.value = value
 	} else {
-		i = item{value: value, timer: time.NewTimer(c.ttl)}
+		i = item{
+			timer: time.NewTimer(c.ttl),
+			value: value,
+		}
 		c.items[key] = i
 		go func() {
 			<-i.timer.C
 			c.Expire(key)
 		}()
 	}
-}
-
-// Expire deletes given key.
-func (c *cache) Expire(key interface{}) {
-	c.Lock()
-	delete(c.items, key)
-	c.Unlock()
 }
