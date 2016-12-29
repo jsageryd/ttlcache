@@ -9,6 +9,7 @@ import (
 // Cache is a key-value cache for arbitrary values
 type Cache interface {
 	Expire(key interface{})
+	ExpireAll()
 	Get(key interface{}) (interface{}, bool)
 	Set(key interface{}, value interface{})
 }
@@ -42,6 +43,16 @@ func (c *cache) Expire(key interface{}) {
 		close(i.expired)
 	}
 	delete(c.items, key)
+	c.Unlock()
+}
+
+// ExpireAll expires all keys.
+func (c *cache) ExpireAll() {
+	c.Lock()
+	for _, i := range c.items {
+		close(i.expired)
+	}
+	c.items = make(map[interface{}]item)
 	c.Unlock()
 }
 

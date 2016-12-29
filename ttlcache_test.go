@@ -65,6 +65,27 @@ func TestExpire(t *testing.T) {
 	}
 }
 
+func TestExpireAll(t *testing.T) {
+	c := New(1 * time.Minute)
+
+	for i := 0; i < 10; i++ {
+		c.Set(i, "value")
+	}
+
+	c.ExpireAll()
+
+	key := 0
+	gotValue, ok := c.Get(key)
+
+	if gotValue != nil || ok {
+		t.Errorf("c.Get(%d) = %q, %t; want <nil>, false", key, gotValue, ok)
+	}
+
+	if got, want := len(c.(*cache).items), 0; got != want {
+		t.Errorf("cache has %d items, want %d", got, want)
+	}
+}
+
 func TestSetTTLReset(t *testing.T) {
 	c := New(20 * time.Millisecond)
 	key, value := "key", "value"
