@@ -17,7 +17,7 @@ func TestGetExisting(t *testing.T) {
 	}
 
 	if got, want := gotValue, value; got != want {
-		t.Errorf("c.Get(%q) = %v, want %q", key, got, want)
+		t.Errorf("c.Get(%q) = %q; want %q", key, got, want)
 	}
 }
 
@@ -33,7 +33,7 @@ func TestGetNonExistent(t *testing.T) {
 	}
 
 	if gotValue != nil {
-		t.Errorf("c.Get(%q) = %v, want nil", key, gotValue)
+		t.Errorf("c.Get(%q) = %q, want nil", key, gotValue)
 	}
 }
 
@@ -47,7 +47,7 @@ func TestGetTTL(t *testing.T) {
 	gotValue, ok := c.Get(key)
 
 	if gotValue != nil || ok {
-		t.Errorf("c.Get(%q) = %v, %v; want <nil>, false", key, gotValue, ok)
+		t.Errorf("c.Get(%q) = %q, %t; want <nil>, false", key, gotValue, ok)
 	}
 }
 
@@ -61,7 +61,7 @@ func TestExpire(t *testing.T) {
 	gotValue, ok := c.Get(key)
 
 	if gotValue != nil || ok {
-		t.Errorf("c.Get(%q) = %v, %v; want <nil>, false", key, gotValue, ok)
+		t.Errorf("c.Get(%q) = %q, %t; want <nil>, false", key, gotValue, ok)
 	}
 }
 
@@ -98,7 +98,7 @@ func TestSetTTLReset(t *testing.T) {
 	gotValue, ok := c.Get(key)
 
 	if gotValue != value || !ok {
-		t.Errorf("c.Get(%q) = %v, %v; want %q, true", key, gotValue, ok, value)
+		t.Errorf("c.Get(%q) = %q, %t; want %q, true", key, gotValue, ok, value)
 	}
 }
 
