@@ -60,10 +60,11 @@ func (c *cache) ExpireAll() {
 // exists, otherwise false.
 func (c *cache) Get(key interface{}) (interface{}, bool) {
 	c.RLock()
-	defer c.RUnlock()
 	if i, ok := c.items[key]; ok {
+		c.RUnlock()
 		return i.value, true
 	}
+	c.RUnlock()
 	return nil, false
 }
 
