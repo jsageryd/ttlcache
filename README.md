@@ -23,6 +23,14 @@ func main() {
 }
 ```
 
+## Note
+For every new key that is set a goroutine is spawned to expire that key after
+the timeout. This keeps the implementation clean and simple. Already existing
+keys keep the same goroutine if they are set again before they have expired.
+While it should not generally be an issue to spawn many thousand goroutines, if
+you have a very large amount of things to cache, this package is not for you. So
+keep that in mind.
+
 ## Licence
 Copyright (c) 2016 Johan Sageryd <j@1616.se>
 
