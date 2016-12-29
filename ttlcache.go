@@ -14,8 +14,9 @@ type Cache interface {
 }
 
 type item struct {
-	timer *time.Timer
-	value interface{}
+	expired chan struct{}
+	timer   *time.Timer
+	value   interface{}
 }
 
 type cache struct {
@@ -37,6 +38,9 @@ func New(ttl time.Duration) Cache {
 // Expire deletes given key.
 func (c *cache) Expire(key interface{}) {
 	c.Lock()
+	if i, ok := c.items[key]; ok {
+		close(i.expired)
+	}
 	delete(c.items, key)
 	c.Unlock()
 }
@@ -61,13 +65,18 @@ func (c *cache) Set(key interface{}, value interface{}) {
 		i.value = value
 	} else {
 		i = item{
-			timer: time.NewTimer(c.ttl),
-			value: value,
+			expired: make(chan struct{}),
+			timer:   time.NewTimer(c.ttl),
+			value:   value,
 		}
 		c.items[key] = i
 		go func() {
-			<-i.timer.C
-			c.Expire(key)
+			select {
+			case <-i.timer.C:
+				c.Expire(key)
+			case <-i.expired:
+				return
+			}
 		}()
 	}
 }
