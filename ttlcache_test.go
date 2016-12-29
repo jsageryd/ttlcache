@@ -101,3 +101,78 @@ func TestSetTTLReset(t *testing.T) {
 		t.Errorf("c.Get(%q) = %v, %v; want %q, true", key, gotValue, ok, value)
 	}
 }
+
+func BenchmarkGetExisting(b *testing.B) {
+	c := New(5 * time.Minute)
+
+	const numKeys = 100000
+
+	for key := 0; key < numKeys; key++ {
+		c.Set(key, "value")
+	}
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		c.Get(i % numKeys)
+	}
+
+	b.StopTimer()
+
+	c.ExpireAll()
+}
+
+func BenchmarkGetNonExistent(b *testing.B) {
+	c := New(5 * time.Minute)
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		c.Get(i)
+	}
+
+	b.StopTimer()
+
+	c.ExpireAll()
+}
+
+func BenchmarkSetExisting(b *testing.B) {
+	c := New(5 * time.Minute)
+
+	const numKeys = 100000
+
+	for key := 0; key < numKeys; key++ {
+		c.Set(key, "value")
+	}
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		c.Set(i%numKeys, "value")
+	}
+
+	b.StopTimer()
+
+	c.ExpireAll()
+}
+
+func BenchmarkSetNonExistent(b *testing.B) {
+	c := New(5 * time.Minute)
+
+	const numKeys = 100000
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		if i%numKeys == 0 {
+			b.StopTimer()
+			c.ExpireAll()
+			b.StartTimer()
+		}
+		c.Set(i%numKeys, "value")
+	}
+
+	b.StopTimer()
+
+	c.ExpireAll()
+}
