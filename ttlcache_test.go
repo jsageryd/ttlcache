@@ -86,6 +86,19 @@ func TestExpireAll(t *testing.T) {
 	}
 }
 
+func TestSet(t *testing.T) {
+	c := New(1 * time.Second)
+	key, value := "key", "value"
+
+	c.Set(key, value)
+
+	gotValue, ok := c.Get(key)
+
+	if gotValue != value || !ok {
+		t.Errorf("c.Get(%q) = %q, %t; want %q, true", key, gotValue, ok, value)
+	}
+}
+
 func TestSetTTLReset(t *testing.T) {
 	c := New(20 * time.Millisecond)
 	key, value := "key", "value"
