@@ -1,4 +1,10 @@
 # TTL cache
+
+[![Build Status](https://travis-ci.org/jsageryd/ttlcache.svg?branch=master)](https://travis-ci.org/jsageryd/ttlcache)
+[![Go Report Card](https://goreportcard.com/badge/github.com/jsageryd/ttlcache)](https://goreportcard.com/report/github.com/jsageryd/ttlcache)
+[![GoDoc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](https://godoc.org/github.com/jsageryd/ttlcache)
+[![Licence MIT](https://img.shields.io/badge/licence-MIT-lightgrey.svg?style=flat)](https://github.com/jsageryd/ttlcache#licence)
+
 Simple thread-safe expiring in-memory cache.
 
 ## Usage example
