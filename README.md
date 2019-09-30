@@ -38,7 +38,7 @@ you have a very large amount of things to cache, this package is not for you. So
 keep that in mind. Consider [Qcache](https://github.com/jsageryd/qcache).
 
 ## Licence
-Copyright (c) 2016 Johan Sageryd <j@1616.se>
+Copyright (c) 2016-2019 Johan Sageryd <j@1616.se>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
