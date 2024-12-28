@@ -1,6 +1,6 @@
 # TTL cache
 
-[![Build Status](https://travis-ci.org/jsageryd/ttlcache.svg?branch=master)](https://travis-ci.org/jsageryd/ttlcache)
+[![Build Status](https://github.com/jsageryd/ttlcache/workflows/ci/badge.svg)](https://github.com/jsageryd/ttlcache/actions?query=workflow%3Aci)
 [![Go Report Card](https://goreportcard.com/badge/github.com/jsageryd/ttlcache)](https://goreportcard.com/report/github.com/jsageryd/ttlcache)
 [![GoDoc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](https://godoc.org/github.com/jsageryd/ttlcache)
 [![Licence MIT](https://img.shields.io/badge/licence-MIT-lightgrey.svg?style=flat)](https://github.com/jsageryd/ttlcache#licence)
